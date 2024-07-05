@@ -66,7 +66,8 @@ class Booking(models.Model):
 
 
 class Rating(models.Model):
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    driver = models.ForeignKey(Driver, related_name='rating_received', on_delete=models.CASCADE)
+    passenger = models.ForeignKey(CustomUser, related_name='rating_left', on_delete=models.CASCADE)
     rating = models.DecimalField(verbose_name='Рейтинг', max_digits=2, decimal_places=1)
 
     def __str__(self):
@@ -80,7 +81,6 @@ class Rating(models.Model):
 class Comment(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='comments')
     passenger = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     text = models.TextField(verbose_name='Комментарий')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
