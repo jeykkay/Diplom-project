@@ -24,4 +24,4 @@ class RatingAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentsAdmin(admin.ModelAdmin):
-    list_display = ('passenger', 'driver', 'text', 'created_at', )
+    list_display = ('passenger', 'trip', 'text', 'created_at', )
