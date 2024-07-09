@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from trips.views import (CarViewSet, TripViewSet,
                          BookingAPIView, RatingAPIView,
-                         CommentAPIView, RatingDetailAPIView, CommentDetailAPIView)
+                         CommentAPIView, RatingDetailAPIView,
+                         CommentDetailAPIView, BookingDetailAPIView)
 
 
 router = DefaultRouter()
@@ -13,6 +14,7 @@ router.register(r'trips', TripViewSet, basename='trips')
 
 urlpatterns = [
     path('create-booking/', BookingAPIView.as_view(), name='create-booking'),
+    path('create-booking/<int:pk>/', BookingDetailAPIView.as_view()),
 
     path('add-rating/', RatingAPIView.as_view(), name='add-rating'),
     path('add-rating/<int:driver_id>/', RatingDetailAPIView.as_view()),

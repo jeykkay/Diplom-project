@@ -9,11 +9,11 @@ class Car(models.Model):
 
     )
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, verbose_name='Водитель')
-    brand = models.CharField(max_length=255, blank=False, null=False, verbose_name='Марка автомобиля')
-    model = models.CharField(max_length=255, blank=False, null=False, verbose_name='Модель автомобиля')
+    brand = models.CharField(max_length=255, verbose_name='Марка автомобиля')
+    model = models.CharField(max_length=255, verbose_name='Модель автомобиля')
     year = models.PositiveIntegerField(verbose_name='Год')
     color = models.CharField(max_length=255, verbose_name='Цвет')
-    num_car = models.CharField(unique=True, blank=False, null=False, verbose_name='Гос номер автомобиля')
+    num_car = models.CharField(unique=True, verbose_name='Гос номер автомобиля')
     car_status = models.CharField(choices=CAR_STATUS, default='Available', max_length=100, verbose_name='Статус')
 
     def __str__(self):
@@ -51,11 +51,17 @@ class Trip(models.Model):
 
 
 class Booking(models.Model):
+    BOOKING_STATUS = (
+        ('Not booked', 'Not booked'),
+        ('Booked', 'Booked'),
+
+    )
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="booking_as_car")
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name="booking_as_driver")
     passenger = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="booking_as_passenger")
     date = models.DateField(blank=False, null=False, verbose_name='Дата брони')
     time = models.TimeField(blank=False, null=False, verbose_name='Время брони')
+    booking_status = models.CharField(choices=BOOKING_STATUS, default='Not booked', max_length=100, verbose_name='Статус')
 
     def __str__(self):
         return f"The car {self.car} is reserved {self.date} at {self.time}"
@@ -71,7 +77,7 @@ class Rating(models.Model):
     rating = models.DecimalField(verbose_name='Рейтинг', max_digits=2, decimal_places=1)
 
     def __str__(self):
-        return f"{self.driver.first_name} rating is {self.rating}"
+        return f"{self.driver.first_name} rating is {self.rating} from {self.passenger.first_name}"
 
     class Meta:
         verbose_name = "Рейтинг"

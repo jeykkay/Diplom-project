@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.contrib.auth.models import BaseUserManager, PermissionsMixin, AbstractBaseUser
 from django.contrib.auth.models import Group, Permission
 
@@ -66,6 +67,12 @@ class Driver(PermissionsMixin, AbstractBaseUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def average_rating(self):
+        rating_avg = self.rating_received.all().aggregate(rating_avg=Avg('rating'))['rating_avg']
+        if rating_avg:
+            return format(rating_avg, ".2f")
+        return None
 
     class Meta:
         verbose_name = 'Водитель'

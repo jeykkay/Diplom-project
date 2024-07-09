@@ -7,7 +7,7 @@ from trips.models import (Car, Trip,
 class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
-        fields = ('id', 'brand', 'year', 'model', 'num_car')
+        fields = '__all__'
 
 
 class TripSerializer(serializers.ModelSerializer):

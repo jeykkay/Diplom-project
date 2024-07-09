@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from .tasks import send_booking_email
 
 from trips.serializer import (CarSerializer, TripSerializer,
                               BookingSerializer, RatingSerializer,
@@ -16,17 +17,23 @@ from trips.models import (Car, Trip,
 class CarViewSet(ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
-    permission_classes = (AllowAny, )
+
+    def create(self, request):
+        serializer = CarSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TripViewSet(ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
 
 
 class BookingAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
 
     def get(self, request):
         bookings = Booking.objects.all()
@@ -37,12 +44,19 @@ class BookingAPIView(APIView):
         serializer = BookingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            send_booking_email(sender=None, instance=serializer.instance)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class BookingDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = (AllowAny,)
+
+
 class RatingAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
 
     def get(self, request):
         ratings = Rating.objects.all()
@@ -67,7 +81,7 @@ class RatingDetailAPIView(APIView):
 
 
 class CommentAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
 
     def get(self, request):
         comments = Comment.objects.all()
@@ -85,4 +99,4 @@ class CommentAPIView(APIView):
 class CommentDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
