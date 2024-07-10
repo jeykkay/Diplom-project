@@ -9,4 +9,5 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', )
+    list_display = ('email', 'first_name', 'last_name', 'average_rating', )
+    readonly_fields = ('average_rating', )

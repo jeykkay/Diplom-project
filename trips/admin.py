@@ -19,7 +19,7 @@ class BookingAdmin(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ('driver', 'rating', )
+    list_display = ('driver', 'rating', 'passenger', )
 
 
 @admin.register(Comment)
