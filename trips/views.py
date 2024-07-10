@@ -29,11 +29,11 @@ class CarViewSet(ModelViewSet):
 class TripViewSet(ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
 
 class BookingAPIView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         bookings = Booking.objects.all()
@@ -52,11 +52,11 @@ class BookingAPIView(APIView):
 class BookingDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
 
 class RatingAPIView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         ratings = Rating.objects.all()
@@ -81,7 +81,7 @@ class RatingDetailAPIView(APIView):
 
 
 class CommentAPIView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         comments = Comment.objects.all()
@@ -99,4 +99,4 @@ class CommentAPIView(APIView):
 class CommentDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
