@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .tasks import send_booking_email
+from django.core.exceptions import ObjectDoesNotExist
 
 from trips.serializer import (CarSerializer, TripSerializer,
                               BookingSerializer, RatingSerializer,
@@ -33,7 +34,7 @@ class TripViewSet(ModelViewSet):
 
 
 class BookingAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
 
     def get(self, request):
         bookings = Booking.objects.all()
@@ -44,7 +45,10 @@ class BookingAPIView(APIView):
         serializer = BookingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            send_booking_email(sender=None, instance=serializer.instance)
+            try:
+                send_booking_email(sender=None, instance=serializer.instance)
+            except ObjectDoesNotExist:
+                return Response({'error': 'Пользователя не существует'}, status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -52,7 +56,7 @@ class BookingAPIView(APIView):
 class BookingDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
 
 class RatingAPIView(APIView):
