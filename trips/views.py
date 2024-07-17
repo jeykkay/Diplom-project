@@ -34,7 +34,7 @@ class TripViewSet(ModelViewSet):
 
 
 class BookingAPIView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         bookings = Booking.objects.all()
@@ -56,7 +56,7 @@ class BookingAPIView(APIView):
 class BookingDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
 
 class RatingAPIView(APIView):
